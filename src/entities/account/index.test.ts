@@ -1,22 +1,59 @@
- 
-import { expect, test, beforeEach} from 'vitest'
-import { Account } from '.' 
+
+import { expect, test, beforeEach } from 'vitest'
+import { Account, AccountProps } from '.'
+import TransactionHandler from '../../handler/Transaction';
+import Publisher from '../../infra/Publisher';
 import AccountRepository from '../../repository/AccountRepository';
 import AccountRepositoryMemory from '../../repository/memory/AccountRespoistoryMemory'
+import TransactionsRepositoryMemory from '../../repository/memory/TransactionsRepositoryMemory';
 
 let accountRepository: AccountRepository;
 let accountService: Account
- 
-beforeEach(function(){
-     accountRepository = new AccountRepositoryMemory();
-     accountService = new Account(accountRepository)
+let account: AccountProps
+let document: string
+let publisher: Publisher
+let transactionRepository:  TransactionsRepositoryMemory
+
+beforeEach(function () {
+    publisher = new Publisher()
+    accountRepository = new AccountRepositoryMemory();
+    transactionRepository =  new TransactionsRepositoryMemory()
+    accountService = new Account(accountRepository,transactionRepository)
+    document = "123456"
+    accountService.setAccount({ name: "John Doe", document })
+    account = accountService.getAccount(document)
 })
 
 test('create an account', () => {
 
-    accountService.setAccount({name: "John Doe", document:"123456"})
+    expect(account.document).toBe(document)
+})
 
-    const account = accountService.getAccount("123456")
- 
-    expect(account.document).toBe("123456")
+
+test('Test transactions credit ', () => { 
+    accountService.setCredit(document, 10)
+
+    expect(account.saldo).toBe(10)
+})
+
+test('Test transactions debit', () => {
+
+    accountService.setCredit(document, 20)
+    accountService.setDebit(document, 10)
+
+    expect(account.saldo).toBe(10)
+})
+
+test('Test extract', () => {
+
+    accountService.setCredit(document, 10)
+    accountService.setCredit(document, 15)
+    accountService.setDebit(document, 5)
+
+    expect(account.transactions).toEqual([
+        { event: "Credit", amount: 10, type: "C" },
+        { event: "Credit", amount: 15, type: "C" },
+        { event: "Debit", amount: 5, type: "D" }
+    ])
+
 })
