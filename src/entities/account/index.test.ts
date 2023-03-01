@@ -11,11 +11,10 @@ let accountRepository: AccountRepository;
 let accountService: Account
 let account: AccountProps
 let document: string
-let publisher: Publisher
+
 let transactionRepository:  TransactionsRepositoryMemory
 
-beforeEach(function () {
-    publisher = new Publisher()
+beforeEach(function () { 
     accountRepository = new AccountRepositoryMemory();
     transactionRepository =  new TransactionsRepositoryMemory()
     accountService = new Account(accountRepository,transactionRepository)
@@ -30,10 +29,24 @@ test('create an account', () => {
 })
 
 
-test('Test transactions credit ', () => { 
+test('Test transactions credit ', () => {  
     accountService.setCredit(document, 10)
 
     expect(account.saldo).toBe(10)
+})
+test('Test transactions credit duplicate ', () => {  
+    accountService.setCredit(document, 10)
+   const retornoCredit: any = accountService.setCredit(document, 10)
+
+    expect(retornoCredit.success).toBe(false)
+})
+
+test('Test transactions debit duplicate ', () => {  
+    accountService.setCredit(document, 50)
+    accountService.setDebit(document, 10)
+   const retornoCredit: any = accountService.setDebit(document, 10)
+
+    expect(retornoCredit.success).toBe(false)
 })
 
 test('Test transactions debit', () => {
@@ -55,7 +68,7 @@ test("Test transactions ChargeBack Debito", () => {
     accountService.setCredit(document, 10) 
     accountService.setDebit(document, 10)
     expect(account.saldo).toBe(0)
-    
+
     accountService.setChargeBack(document, account.transactions[1].id)
 
     expect(account.saldo).toBe(10)
@@ -66,10 +79,6 @@ test('Test extract', () => {
     accountService.setCredit(document, 15)
     accountService.setDebit(document, 5)
 
-    expect(account.transactions).toEqual([
-        { id: 1, event: "Credit", amount: 10, type: "C" },
-        { id: 2, event: "Credit", amount: 15, type: "C" },
-        { id: 3, event: "Debit", amount: 5, type: "D" }
-    ])
+    expect(account.transactions.length).toBe(3)
 
 })

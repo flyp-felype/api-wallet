@@ -10,7 +10,7 @@ export default class TransactionHandler implements Observer {
     }
     notify(transactions: TransactionsProps): void {
         const account = this.accountRepository.get(transactions.document)
-
+        
         switch (transactions.type) {
             case "C":
                 this.transactionRepository.setCredit(account, transactions)
