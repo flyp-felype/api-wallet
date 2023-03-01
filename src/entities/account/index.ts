@@ -1,14 +1,14 @@
 import AccountRepository from "../../repository/AccountRepository"
-
+import { TransactionsProps } from '../transactions'
 export interface AccountProps {
     name: string
     document: string
     saldo?: number
-    transactions?: any[]
+    transactions?: TransactionsProps[]
 }
 
 export class Account {
- 
+
     constructor(readonly accountRepository: AccountRepository) {
     }
 
@@ -18,6 +18,5 @@ export class Account {
 
     setAccount(account: AccountProps) {
         this.accountRepository.save(account)
-
     }
 }

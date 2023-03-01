@@ -2,7 +2,8 @@ import TransactionsRepository from "../../repository/TransactionsRepositoy";
 import { AccountProps } from "../account";
 export interface TransactionsProps{
     event: string,
-    amount: number
+    amount: number,
+    type: "D" | "C" //D = debito C = credito
 }
 export class Transactiosn{
     constructor(readonly transactionsRepository: TransactionsRepository){}

@@ -1,13 +1,18 @@
- import { expect, test} from 'vitest'
+ 
+import { expect, test, beforeEach} from 'vitest'
 import { Account } from '.' 
+import AccountRepository from '../../repository/AccountRepository';
 import AccountRepositoryMemory from '../../repository/memory/AccountRespoistoryMemory'
 
+let accountRepository: AccountRepository;
+let accountService: Account
  
+beforeEach(function(){
+     accountRepository = new AccountRepositoryMemory();
+     accountService = new Account(accountRepository)
+})
 
 test('create an account', () => {
-
-    const accountRepository = new AccountRepositoryMemory();
-    const  accountService = new Account(accountRepository)
 
     accountService.setAccount({name: "John Doe", document:"123456"})
 

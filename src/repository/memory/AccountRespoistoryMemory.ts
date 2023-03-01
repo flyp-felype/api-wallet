@@ -11,6 +11,7 @@ export default class AccountRepositoryMemory implements AccountRepository {
 
     save(account: AccountProps): void { 
         account.saldo = 0
+        account.transactions = []
         this.accounts.push(account)
     }
 
