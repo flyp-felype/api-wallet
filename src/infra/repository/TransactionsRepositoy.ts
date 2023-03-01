@@ -1,6 +1,6 @@
-import { AccountProps } from "../../entities/account";
+import { AccountProps, TransactionsProps } from "../../entities/account";
 
 export default interface TransactionsRepository{
-    setCredit(account: AccountProps, amount: number): AccountProps;
-    setDebit(account: AccountProps, amount: number): AccountProps;
+    setCredit(account: AccountProps, transaction: TransactionsProps): AccountProps;
+    setDebit(account: AccountProps, transaction: TransactionsProps): AccountProps;
 }

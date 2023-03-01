@@ -1,7 +1,7 @@
-import { TransactionsProps } from "../entities/account";
-import Observer from "../infra/Observe";
-import AccountRepository from "../infra/repository/AccountRepository";
-import TransactionsRepository from "../infra/repository/TransactionsRepositoy";
+import { TransactionsProps } from "../../entities/account";
+import Observer from "../Observe";
+import AccountRepository from "../repository/AccountRepository";
+import TransactionsRepository from "../repository/TransactionsRepositoy";
 
 export default class TransactionHandler implements Observer {
     operation: string;
@@ -10,13 +10,19 @@ export default class TransactionHandler implements Observer {
     }
     notify(transactions: TransactionsProps): void {
         const account = this.accountRepository.get(transactions.document)
-   
+
         switch (transactions.type) {
             case "C":
-                this.transactionRepository.setCredit(account, transactions.amount)
+                this.transactionRepository.setCredit(account, transactions)
                 break;
             case "D":
-                this.transactionRepository.setDebit(account, transactions.amount)
+                this.transactionRepository.setDebit(account, transactions)
+                break;
+            case "ED":
+                this.transactionRepository.setCredit(account, transactions)
+                break;
+            case "EC":
+                this.transactionRepository.setDebit(account, transactions)
                 break;
             default:
                 throw new Error('Type not found')
