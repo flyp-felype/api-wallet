@@ -1,4 +1,4 @@
-import { AccountProps } from "../../entities/account";
+import { AccountProps } from "../../../entities/account";
 import TransactionsRepository from "../TransactionsRepositoy";
 
 export default class TransactionsRepositoryMemory implements TransactionsRepository {

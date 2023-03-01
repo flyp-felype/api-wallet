@@ -1,7 +1,7 @@
 import TransactionHandler from "../../handler/Transaction"
 import Publisher from "../../infra/Publisher"
-import AccountRepository from "../../repository/AccountRepository"
-import TransactionsRepository from "../../repository/TransactionsRepositoy"
+import AccountRepository from "../../infra/repository/AccountRepository"
+import TransactionsRepository from "../../infra/repository/TransactionsRepositoy"
 export interface AccountProps {
     name: string
     document: string

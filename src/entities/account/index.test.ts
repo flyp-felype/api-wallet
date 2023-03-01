@@ -3,9 +3,9 @@ import { expect, test, beforeEach } from 'vitest'
 import { Account, AccountProps } from '.'
 import TransactionHandler from '../../handler/Transaction';
 import Publisher from '../../infra/Publisher';
-import AccountRepository from '../../repository/AccountRepository';
-import AccountRepositoryMemory from '../../repository/memory/AccountRespoistoryMemory'
-import TransactionsRepositoryMemory from '../../repository/memory/TransactionsRepositoryMemory';
+import AccountRepository from '../../infra/repository/AccountRepository';
+import AccountRepositoryMemory from '../../infra/repository/memory/AccountRespoistoryMemory'
+import TransactionsRepositoryMemory from '../../infra/repository/memory/TransactionsRepositoryMemory';
 
 let accountRepository: AccountRepository;
 let accountService: Account

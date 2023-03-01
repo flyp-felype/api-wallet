@@ -1,7 +1,7 @@
 import { TransactionsProps } from "../entities/account";
 import Observer from "../infra/Observe";
-import AccountRepository from "../repository/AccountRepository";
-import TransactionsRepository from "../repository/TransactionsRepositoy";
+import AccountRepository from "../infra/repository/AccountRepository";
+import TransactionsRepository from "../infra/repository/TransactionsRepositoy";
 
 export default class TransactionHandler implements Observer {
     operation: string;
