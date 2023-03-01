@@ -11,4 +11,4 @@ Foi desenvolvido um DER do banco:
 em event tenho o type (C | D) C = crédito e D = débito, para entender se o evento insere ou retira dinheiro da carteira
 - transaction: Seria a transações do cliente
 
-![Der Banco](https://drive.google.com/file/d/1o5zhrPoq2MtFIXFEc06X1nI8bheTZUvM/view?usp=sharing)
+![Der Banco](DER-PicPay.png)
