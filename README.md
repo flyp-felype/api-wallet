@@ -12,3 +12,7 @@ em event tenho o type (C | D) C = crédito e D = débito, para entender se o eve
 - transaction: Seria a transações do cliente
 
 ![Der Banco](DER-PicPay.png)
+
+
+### ORM
+Para facilitar o desenvolvimento irei usar o https://typeorm.io/
