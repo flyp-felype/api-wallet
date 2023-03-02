@@ -8,3 +8,11 @@ services:
       - "3000:3000"
     volumes:  
       - .:/usr/app
+  db:
+    image: postgres:latest 
+    environment: 
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=root
+      - POSTGRES_DB=picpay
+    ports:
+      - '5432:5432' 

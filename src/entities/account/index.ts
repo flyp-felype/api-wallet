@@ -7,7 +7,8 @@ export interface AccountProps {
     name: string
     document: string
     saldo?: number
-    transactions?: TransactionsProps[]
+    transactions?: TransactionsProps[],
+    error?: any
 }
 
 export interface TransactionsProps {
@@ -21,15 +22,16 @@ export interface TransactionsProps {
 
 const timeInterval = 60000 //tempo para não permirtir transação duplicadas
 export class Account {
-    constructor(readonly accountRepository: AccountRepository, readonly transactionsRepository: TransactionsRepository) {
+    constructor(readonly accountRepository: AccountRepository, readonly transactionsRepository?: TransactionsRepository) {
     }
 
     getAccount(document) {
         return this.accountRepository.get(document)
     }
 
-    setAccount(account: AccountProps) {
-        this.accountRepository.save(account)
+    async setAccount(account: AccountProps) {
+       return  await this.accountRepository.save(account)
+       
     }
 
     setCredit(document: string, amount: number) {

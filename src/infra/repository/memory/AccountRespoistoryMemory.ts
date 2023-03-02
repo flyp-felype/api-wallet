@@ -9,10 +9,11 @@ export default class AccountRepositoryMemory implements AccountRepository {
         this.accounts = []
     }
 
-    save(account: AccountProps): void { 
+    save(account: AccountProps) { 
         account.saldo = 0
         account.transactions = []
         this.accounts.push(account)
+        return this.accounts.find(x => x.document === account.document)
     }
 
     get(accountDocument: string): AccountProps {

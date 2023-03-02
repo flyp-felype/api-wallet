@@ -1,8 +1,6 @@
 
 import { expect, test, beforeEach } from 'vitest'
-import { Account, AccountProps } from '.'
-import TransactionHandler from '../../infra/handler/Transaction';
-import Publisher from '../../infra/Publisher';
+import { Account, AccountProps } from '.' 
 import AccountRepository from '../../infra/repository/AccountRepository';
 import AccountRepositoryMemory from '../../infra/repository/memory/AccountRespoistoryMemory'
 import TransactionsRepositoryMemory from '../../infra/repository/memory/TransactionsRepositoryMemory';
@@ -14,7 +12,7 @@ let document: string
 
 let transactionRepository:  TransactionsRepositoryMemory
 
-beforeEach(function () { 
+beforeEach(async function () { 
     accountRepository = new AccountRepositoryMemory();
     transactionRepository =  new TransactionsRepositoryMemory()
     accountService = new Account(accountRepository,transactionRepository)
@@ -31,8 +29,9 @@ test('create an account', () => {
 
 test('Test transactions credit ', () => {  
     accountService.setCredit(document, 10)
+    accountService.setCredit(document, 20)
 
-    expect(account.saldo).toBe(10)
+    expect(account.saldo).toBe(30)
 })
 test('Test transactions credit duplicate ', () => {  
     accountService.setCredit(document, 10)
