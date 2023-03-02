@@ -4,8 +4,7 @@ import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import cors from "cors";
  
-import { AppDataSource } from './data-source';
-import { router } from './router';
+import { AppDataSource } from './data-source'; 
 import AccountController from './controller/AccountController';
 dotenv.config();
 
@@ -36,7 +35,7 @@ app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 //accounts
-app.get('/account', AccountController.get)
+app.get('/account/:document', AccountController.get)
 app.post('/account', AccountController.create)
 
 app.get('/', (req: Request, res: Response) => {

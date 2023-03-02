@@ -4,13 +4,14 @@ import { Account, AccountProps } from '.'
 import AccountRepository from '../../infra/repository/AccountRepository';
 import AccountRepositoryMemory from '../../infra/repository/memory/AccountRespoistoryMemory'
 import TransactionsRepositoryMemory from '../../infra/repository/memory/TransactionsRepositoryMemory';
+import TransactionsRepository from '../../infra/repository/TransactionsRepositoy';
 
 let accountRepository: AccountRepository;
 let accountService: Account
 let account: AccountProps
 let document: string
 
-let transactionRepository:  TransactionsRepositoryMemory
+let transactionRepository:TransactionsRepository
 
 beforeEach(async function () { 
     accountRepository = new AccountRepositoryMemory();
