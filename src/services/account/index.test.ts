@@ -60,7 +60,7 @@ test('Test transactions debit', async () => {
 
 test("Test transactions ChargeBack Credito", async () => {
     account = await accountService.setTransaction(document, 30, 'credito', 'C')
-    accountService.setChargeBack(document, account.transactions[0].id)
+    accountService.setChargeBack(document, account.transactions[0].id, 'estorno credito')
     expect(account.saldo).toBe(0)
 })
 
@@ -69,7 +69,7 @@ test("Test transactions ChargeBack Debito", async () => {
     account = await accountService.setTransaction(document, 10, 'debito', 'D')
     expect(account.saldo).toBe(0)
 
-    accountService.setChargeBack(document, account.transactions[1].id)
+    accountService.setChargeBack(document, account.transactions[1].id, 'estorno debito')
 
     expect(account.saldo).toBe(10)
 })

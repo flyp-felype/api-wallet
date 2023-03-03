@@ -1,4 +1,4 @@
-import { AccountProps, TransactionsProps } from "../../entities/account";
+import { AccountProps, TransactionsProps } from "../../services/account";
 
 export default interface TransactionsRepository{
     setTransaction(account: AccountProps, transaction: TransactionsProps): AccountProps | any;

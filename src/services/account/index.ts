@@ -83,16 +83,17 @@ export class Account {
 
     }
     
-    setChargeBack(document: string, transactionID: number) {
+  async  setChargeBack(document: string, transactionID: number, event: string) {
         const publisher = new Publisher();
-        const account = this.accountRepository.get(document)
-
+        const account = await this.accountRepository.get(document)
+        console.log(account)
         const transaction = account.transactions.find(x => x.id === transactionID)
         const typeChargeBack = transaction.type === "C" ? "EC" : "ED"
+
         publisher.register(new TransactionHandler( typeChargeBack, this.accountRepository, this.transactionsRepository))
 
 
-        publisher.publish({ events: { name: "ChargeBack", type: typeChargeBack }, amount: transaction.amount, type: typeChargeBack, document })
+        publisher.publish({ events: { name: event, type: typeChargeBack }, amount: transaction.amount, type: typeChargeBack, document })
 
     } 
 

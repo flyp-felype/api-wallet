@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { Account } from "../entities/account";
+import { Account } from "../services/account";
 import AccountRepositorySQL from "../infra/repository/postgresql/AccountRespositorySQL";
 
 const AccountController = {

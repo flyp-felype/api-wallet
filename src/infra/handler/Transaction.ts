@@ -1,4 +1,4 @@
-import { TransactionsProps, Type } from "../../entities/account";
+import { TransactionsProps, Type } from "../../services/account";
 import Observer from "../Observe";
 import AccountRepository from "../repository/AccountRepository";
 import TransactionsRepository from "../repository/TransactionsRepositoy";

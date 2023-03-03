@@ -1,5 +1,5 @@
  
-import { TransactionsProps } from "../entities/account"
+import { TransactionsProps } from "../services/account"
 import Observer from "./Observe"
 
 export default class Publisher {

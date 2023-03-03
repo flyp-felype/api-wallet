@@ -1,4 +1,4 @@
-import { TransactionsProps, Type } from "../entities/account";
+import { TransactionsProps, Type } from "../services/account";
 
  
 export default interface Observer {

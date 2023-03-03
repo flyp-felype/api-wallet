@@ -1,5 +1,5 @@
 import { AppDataSource } from "../../../data-source";
-import { AccountProps, TransactionsProps } from "../../../entities/account";
+import { AccountProps, TransactionsProps } from "../../../services/account";
 import { Account } from "../../../entity/Account";
 import { Events } from "../../../entity/Events";
 import { Transactions } from "../../../entity/Transactions";

@@ -1,5 +1,5 @@
 import { Response, Request} from "express";
-import { Account } from "../entities/account";
+import { Account } from "../services/account";
 import AccountRepositorySQL from "../infra/repository/postgresql/AccountRespositorySQL";
 import TransactionsRepositorySQL from "../infra/repository/postgresql/TransactionsRepositorySQL";
 
@@ -43,11 +43,33 @@ const TransactionsController = {
              const account = await accountService.getAccount(document)
     
             const transactions = await accountService.getExtracts(account, Number(limit), Number(page))
-            console.log(transactions)
+          
             res.status(200).json(transactions)
 
             
         }catch(error){  
+            res.status(400).json(error.toString())
+        }
+    },
+
+    async estornoTransacao(req: Request, res: Response){
+        try{    
+            const {document, transaction, event} = req.body
+
+            if(!document) throw new Error('Favor enviar o documento')
+
+            if(!transaction) throw new Error('Favor enviar o id da transação')
+
+            const transferRepository = new TransactionsRepositorySQL()
+            const accountRepository = new AccountRepositorySQL()
+
+            const accountService = new Account(accountRepository, transferRepository)
+
+             await accountService.setChargeBack(document, transaction, event)
+
+            res.status(200).json('Transação extornada com sucesso!')
+
+        }catch(error){
             res.status(400).json(error.toString())
         }
     }

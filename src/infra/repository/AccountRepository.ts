@@ -1,4 +1,4 @@
-import { AccountProps } from "../../entities/account";
+import { AccountProps } from "../../services/account";
 
 export default interface AccountRepository{
     save(account: AccountProps): AccountProps | any;
