@@ -1,0 +1,86 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "API Wallet PicPay",
+        "description": "API desafio técnico para vaga de Backend na PicPay",
+        "contact": {
+            "email": "felypeweb@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000/"
+        }
+    ],
+    "paths": {
+        "/account/{document}": {
+            "get": {
+                "summay": "Busca pela conta",
+                "description": "Rota irá retornar os dados da conta",
+                "tags": [
+                    "Account"
+                ],
+                "parameters": [
+                    {
+                        "name": "document",
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "Código do documento da conta cadastrada"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Error"
+                    },
+                    "401": {
+                        "description": "Error"
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/Account"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Account": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "description": "ID da conta cadastrada"
+                    },
+                    "document": {
+                        "type": "string",
+                        "description": "Número do CPF do cliente"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Nome do cliente"
+                    },
+                    "createAt": {
+                        "type": "date",
+                        "description": "Data de Criação"
+                    },
+                    "transactions": {
+                        "type": "array",
+                        "description": "Lista de transações do cliente"
+                    }
+                }
+            }
+        }
+    }
+}

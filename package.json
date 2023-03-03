@@ -8,7 +8,7 @@
    "license": "MIT",
    "scripts": {
       "test": "vitest",
-      "start": "ts-node src/index.ts",
+      "start": "ts-node dist/src/index.js",
       "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/index.ts",
       "prestart": "tsc",
       "prepare": "husky install",
