@@ -39,6 +39,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get('/account/:document', AccountController.get)
 app.post('/account', AccountController.create)
 app.post('/transaction', TransactionsController.transaction)
+app.get('/transaction/:document/:limit/:page', TransactionsController.getExtract)
 
 
 app.get('/', (req: Request, res: Response) => {

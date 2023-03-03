@@ -33,17 +33,21 @@ export default class AccountRepositorySQL implements AccountRepository {
                 .innerJoinAndSelect('transactions.events', 'events')
                 .where('account.document = :document', { document: accountDocument }).getOne()
 
-                const account: any  = accountData
+            const account: any = accountData
+
+            if (account) {
                 account.saldo = 0
                 for (let index = 0; index < accountData?.transactions.length; index++) {
                     const transaction = accountData?.transactions[index];
-                     
-                    if(transaction.events.type === 'C') account.saldo =  Number(account.saldo) + Number(transaction.amount)
-                    
-                    if(transaction.events.type === 'D') account.saldo = Number(account.saldo) - Number(transaction.amount)
-                    
+
+                    if (transaction.events.type === 'C') account.saldo = Number(account.saldo) + Number(transaction.amount)
+
+                    if (transaction.events.type === 'D') account.saldo = Number(account.saldo) - Number(transaction.amount)
+
                 }
-          
+            }
+
+
             return account
         } catch (error) {
             return { error: error.toString() }

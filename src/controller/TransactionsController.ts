@@ -28,6 +28,28 @@ const TransactionsController = {
         }catch(error){
             res.status(400).json(error.toString())
         }
+    },
+
+    async getExtract(req: Request, res: Response){
+        try{
+            const {document, limit, page} = req.params
+
+            if(!document) throw new Error("Favor enviar o documento do cliente")
+
+            const transferRepository = new TransactionsRepositorySQL()
+            const accountRepository = new AccountRepositorySQL()
+            
+            const accountService = new Account(accountRepository, transferRepository)
+             const account = await accountService.getAccount(document)
+    
+            const transactions = await accountService.getExtracts(account, Number(limit), Number(page))
+            console.log(transactions)
+            res.status(200).json(transactions)
+
+            
+        }catch(error){  
+            res.status(400).json(error.toString())
+        }
     }
 }
 

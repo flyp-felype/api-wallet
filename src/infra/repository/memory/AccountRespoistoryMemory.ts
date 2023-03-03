@@ -19,7 +19,7 @@ export default class AccountRepositoryMemory implements AccountRepository {
      get(accountDocument: string) {
         const account = this.accounts.find(x => x.document === accountDocument)
         if (!account) throw new Error("Account not found!")
-       console.log(account)
+   
         return account
     }
 }

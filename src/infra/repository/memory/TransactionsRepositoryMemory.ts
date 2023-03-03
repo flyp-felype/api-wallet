@@ -2,6 +2,10 @@ import { AccountProps, TransactionsProps } from "../../../entities/account";
 import TransactionsRepository from "../TransactionsRepositoy";
 
 export default class TransactionsRepositoryMemory implements TransactionsRepository {
+
+    getTransactions(account: AccountProps, limit: number, page: number) {
+            return account.transactions.splice(page, limit)
+    }
     setTransaction(account: AccountProps, transaction: TransactionsProps): AccountProps {
        
         account.saldo = transaction.type === "C" || transaction.type === "ED" ? account.saldo = account.saldo + transaction.amount : account.saldo = account.saldo - transaction.amount

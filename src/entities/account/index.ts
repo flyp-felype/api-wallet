@@ -36,8 +36,8 @@ export class Account {
     constructor(readonly accountRepository: AccountRepository, readonly transactionsRepository?: TransactionsRepository) {
     }
 
-    getAccount(document) {
-        return this.accountRepository.get(document)
+    async getAccount(document) {
+        return await this.accountRepository.get(document)
     }
 
     async setAccount(account: AccountProps) {
@@ -52,11 +52,11 @@ export class Account {
             let account = await this.accountRepository.get(document)
             
             const transactionLast = account.transactions ? account.transactions[account.transactions.length - 1] : null
-            console.log(transactionLast)
+    
             if (transactionLast) {
                 const dateLastTransaction = dayjs(transactionLast.createAt)
-              
                 const dateNow = dayjs(new Date())
+
                 if (dateNow.diff(dateLastTransaction) < timeInterval
                     && transactionLast.events.type === type
                     && Number(transactionLast.amount) === amount
@@ -71,7 +71,8 @@ export class Account {
 
             publisher.publish({ events: { name: event, type: type }, amount, type: type, document })
             
-              account =  this.accountRepository.get(document) 
+            account =  this.accountRepository.get(document) 
+            
             return account
 
         }
@@ -81,6 +82,7 @@ export class Account {
         }
 
     }
+    
     setChargeBack(document: string, transactionID: number) {
         const publisher = new Publisher();
         const account = this.accountRepository.get(document)
@@ -93,4 +95,10 @@ export class Account {
         publisher.publish({ events: { name: "ChargeBack", type: typeChargeBack }, amount: transaction.amount, type: typeChargeBack, document })
 
     } 
+
+    async getExtracts(account: AccountProps, limit: number, page: number ){
+        const transactions = await this.transactionsRepository.getTransactions(account, limit, page)
+         
+        return transactions
+    }
 }
