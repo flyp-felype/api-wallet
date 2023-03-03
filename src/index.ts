@@ -7,6 +7,7 @@ import cors from "cors";
 import { AppDataSource } from './data-source'; 
 import AccountController from './controller/AccountController';
 import TransactionsController from './controller/TransactionsController'
+import { router } from './router';
 dotenv.config();
 
 AppDataSource.initialize().then(() => { console.log('Data source has beem initialized') }).catch(err => console.log('Error during data source', err))
@@ -17,7 +18,7 @@ const options = {
     definition: {
         openapi: "3.0.1",
         info: {
-            title: "REST API for Swagger Documentation",
+            title: "REST API PicPay Documentation",
             version: "1.0.0",
         },
         schemes: ["http", "https"],
@@ -33,14 +34,11 @@ const swaggerSpec = swaggerJSDoc(options);
 app.use(cors())
 app.use(express.json());
  
+app.use(router);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-//accounts
-app.get('/account/:document', AccountController.get)
-app.post('/account', AccountController.create)
-app.post('/transaction', TransactionsController.transaction)
-app.get('/transaction/:document/:limit/:page', TransactionsController.getExtract)
-app.post('/transaction/estorno', TransactionsController.estornoTransacao)
+ 
+
 
 
 app.get('/', (req: Request, res: Response) => {
