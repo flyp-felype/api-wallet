@@ -9,11 +9,8 @@ export class Transactions {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column() 
-    value: string 
-
-    @Column()
-    id_event: string 
+    @Column("decimal") 
+    amount: number  
 
     @ManyToOne(type => Account, account => account.id) account: Account;
 

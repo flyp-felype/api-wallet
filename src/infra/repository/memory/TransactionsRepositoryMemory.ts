@@ -2,16 +2,19 @@ import { AccountProps, TransactionsProps } from "../../../entities/account";
 import TransactionsRepository from "../TransactionsRepositoy";
 
 export default class TransactionsRepositoryMemory implements TransactionsRepository {
-    setCredit(account: AccountProps, transaction: TransactionsProps): AccountProps {
-        
-        account.saldo += transaction.amount
-        account.transactions.push({id: account.transactions.length + 1, event:transaction.event, amount: transaction.amount, type: transaction.type, date: new Date()})
+    setTransaction(account: AccountProps, transaction: TransactionsProps): AccountProps {
+       
+        account.saldo = transaction.type === "C" || transaction.type === "ED" ? account.saldo = account.saldo + transaction.amount : account.saldo = account.saldo - transaction.amount
+        account.transactions.push({
+                id: account.transactions.length + 1,
+                amount: transaction.amount,
+                events: { type: transaction.type, name: '' },
+                type: transaction.type,
+                createAt: new Date()
+
+        })
         return account
     }
-    setDebit(account: AccountProps, transaction: TransactionsProps): AccountProps {
-        account.saldo -= transaction.amount
-        account.transactions.push({id: account.transactions.length + 1, event:transaction.event, amount: transaction.amount, type: transaction.type, date: new Date()})
-        return account
-    }
+
 
 }

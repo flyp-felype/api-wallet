@@ -4,6 +4,7 @@ import Publisher from "../../infra/Publisher"
 import AccountRepository from "../../infra/repository/AccountRepository"
 import TransactionsRepository from "../../infra/repository/TransactionsRepositoy"
 export interface AccountProps {
+    id?: string,
     name: string
     document: string
     saldo?: number
@@ -11,13 +12,23 @@ export interface AccountProps {
     error?: any
 }
 
+
+
+export type Type = "D" | "C" | 'EC' | 'ED'
+interface EventsTransactions {
+    id?: string,
+    name?: string,
+    type: Type,
+    createAt?: Date
+}
 export interface TransactionsProps {
     id?: number,
-    event: string,
+    events: EventsTransactions,
     amount: number,
     document?: string,
-    type: "D" | "C" | 'EC' | 'ED' //D = debito C = credito EC = estorno credito ED estorno debido
-    date?: Date
+    type: Type,
+
+    createAt?: Date
 }
 
 const timeInterval = 60000 //tempo para não permirtir transação duplicadas
@@ -30,36 +41,43 @@ export class Account {
     }
 
     async setAccount(account: AccountProps) {
-       return  await this.accountRepository.save(account)
-       
-    }
+        return await this.accountRepository.save(account)
 
-    setCredit(document: string, amount: number) {
+    }
+ 
+
+    async setTransaction(document: string, amount: number, event: string, type: Type) {
         try {
             //verifico o ultimo lançamento para saber se é igual ao que estou tentando enviar com um intervalo curto
-            const account = this.accountRepository.get(document)
-            const transactionLast = account.transactions[account.transactions.length - 1]
+            let account = await this.accountRepository.get(document)
+            
+            const transactionLast = account.transactions ? account.transactions[account.transactions.length - 1] : null
+            console.log(transactionLast)
             if (transactionLast) {
-                const dateLastTransaction = dayjs(transactionLast.date)
-                const dateNow = dayjs()
-                if (dateLastTransaction.diff(dateNow) < timeInterval &&
-                    transactionLast.type === 'C' &&
-                    transactionLast.amount === amount &&
-                    transactionLast.event === "Credit")
-                    throw new Error('It is not allowed to send duplicate transaction')
+                const dateLastTransaction = dayjs(transactionLast.createAt)
+              
+                const dateNow = dayjs(new Date())
+                if (dateNow.diff(dateLastTransaction) < timeInterval
+                    && transactionLast.events.type === type
+                    && Number(transactionLast.amount) === amount
+                    && transactionLast.events.name === event
+                )
+                    throw new Error('Você ja realizou esta transação em menos de 1 min!')
             }
 
-            const publisher = new Publisher();
+            const publisher = new Publisher(); 
 
-            publisher.register(new TransactionHandler('C', this.accountRepository, this.transactionsRepository))
+            publisher.register(new TransactionHandler( type, this.accountRepository, this.transactionsRepository))
 
-            publisher.publish({ event: "Credit", amount, type: "C", document })
-
+            publisher.publish({ events: { name: event, type: type }, amount, type: type, document })
+            
+              account =  this.accountRepository.get(document) 
             return account
 
         }
-        catch (error) {
-            return { success: false, error }
+        catch (error) { 
+            console.log(error)
+            throw new Error(error)
         }
 
     }
@@ -69,40 +87,10 @@ export class Account {
 
         const transaction = account.transactions.find(x => x.id === transactionID)
         const typeChargeBack = transaction.type === "C" ? "EC" : "ED"
-        publisher.register(new TransactionHandler(typeChargeBack, this.accountRepository, this.transactionsRepository))
+        publisher.register(new TransactionHandler( typeChargeBack, this.accountRepository, this.transactionsRepository))
 
 
-        publisher.publish({ event: "ChargeBack", amount: transaction.amount, type: typeChargeBack, document })
+        publisher.publish({ events: { name: "ChargeBack", type: typeChargeBack }, amount: transaction.amount, type: typeChargeBack, document })
 
-    }
-    setDebit(document: string, amount: number) {
-        try {
-            const publisher = new Publisher();
-
-            const account = this.accountRepository.get(document)
-
-            if (account.saldo === 0 || account.saldo < amount) throw new Error('Account insufficient funds!')
-
-            const transactionLast = account.transactions[account.transactions.length - 1]
-            if (transactionLast) {
-                const dateLastTransaction = dayjs(transactionLast.date)
-                const dateNow = dayjs()
-                if (dateLastTransaction.diff(dateNow) < timeInterval &&
-                    transactionLast.type === 'D' &&
-                    transactionLast.amount === amount &&
-                    transactionLast.event === "Debit")
-                    throw new Error('It is not allowed to send duplicate transaction')
-            }
-
-
-            publisher.register(new TransactionHandler('D', this.accountRepository, this.transactionsRepository))
-            publisher.publish({ event: "Debit", amount, type: "D", document })
-
-            return account
-        }
-        catch (error) {
-            return { success: false, error }
-        }
-
-    }
+    } 
 }

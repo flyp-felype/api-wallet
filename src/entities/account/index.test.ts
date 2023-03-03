@@ -1,6 +1,6 @@
 
 import { expect, test, beforeEach } from 'vitest'
-import { Account, AccountProps } from '.' 
+import { Account, AccountProps } from '.'
 import AccountRepository from '../../infra/repository/AccountRepository';
 import AccountRepositoryMemory from '../../infra/repository/memory/AccountRespoistoryMemory'
 import TransactionsRepositoryMemory from '../../infra/repository/memory/TransactionsRepositoryMemory';
@@ -11,16 +11,17 @@ let accountService: Account
 let account: AccountProps
 let document: string
 
-let transactionRepository:TransactionsRepository
+let transactionRepository: TransactionsRepository
 
-beforeEach(async function () { 
+beforeEach(function () {
     accountRepository = new AccountRepositoryMemory();
-    transactionRepository =  new TransactionsRepositoryMemory()
-    accountService = new Account(accountRepository,transactionRepository)
+    transactionRepository = new TransactionsRepositoryMemory()
+    accountService = new Account(accountRepository, transactionRepository)
     document = "123456"
     accountService.setAccount({ name: "John Doe", document })
     account = accountService.getAccount(document)
 })
+
 
 test('create an account', () => {
 
@@ -28,56 +29,55 @@ test('create an account', () => {
 })
 
 
-test('Test transactions credit ', () => {  
-    accountService.setCredit(document, 10)
-    accountService.setCredit(document, 20)
+test('Test transactions credit ', async  () => {
+    account = await accountService.setTransaction(document, 10, 'credito', 'C') 
+    account = await accountService.setTransaction(document, 20, 'credito', 'C') 
 
     expect(account.saldo).toBe(30)
 })
-test('Test transactions credit duplicate ', () => {  
-    accountService.setCredit(document, 10)
-   const retornoCredit: any = accountService.setCredit(document, 10)
 
-    expect(retornoCredit.success).toBe(false)
+test('Test transactions credit duplicate ', async () => {
+    const account = accountService.setTransaction(document, 10, 'debito', 'D')
+    const retornoCredit: any = await accountService.setTransaction(document, 10, 'debito', 'D')
+
+    expect(retornoCredit ).toThrow(TypeError); 
 })
 
-test('Test transactions debit duplicate ', () => {  
-    accountService.setCredit(document, 50)
-    accountService.setDebit(document, 10)
-   const retornoCredit: any = accountService.setDebit(document, 10)
-
-    expect(retornoCredit.success).toBe(false)
+test('Test transactions debit duplicate ', async () => {
+    account = await accountService.setTransaction(document, 50, 'credito', 'C')
+    account = await accountService.setTransaction(document, 10, 'debito', 'D')
+    const retornoCredit: any = accountService.setTransaction(document, 10, 'debito', 'D')
+    expect(retornoCredit ).toThrow(TypeError); 
 })
 
-test('Test transactions debit', () => {
+test('Test transactions debit', async () => {
+    let accountTransaction;
+    accountTransaction = await accountService.setTransaction(document, 20, 'credito', 'C')
+    accountTransaction = await accountService.setTransaction(document, 10, 'debito', 'D')
 
-    accountService.setCredit(document, 20)
-    accountService.setDebit(document, 10)
-
-    expect(account.saldo).toBe(10)
+    expect(accountTransaction.saldo).toBe(10)
 })
 
-test("Test transactions ChargeBack Credito", () => {
-    accountService.setCredit(document, 30) 
-    accountService.setChargeBack(document, account.transactions[0].id)
-
+test("Test transactions ChargeBack Credito",async () => {
+    account = await  accountService.setTransaction(document, 30, 'credito', 'C')
+      accountService.setChargeBack(document, account.transactions[0].id)
     expect(account.saldo).toBe(0)
 })
 
-test("Test transactions ChargeBack Debito", () => { 
-    accountService.setCredit(document, 10) 
-    accountService.setDebit(document, 10)
+test("Test transactions ChargeBack Debito", async () => {
+    account = await  accountService.setTransaction(document, 10, 'credito', 'C')
+    account = await   accountService.setTransaction(document, 10, 'debito', 'D')
     expect(account.saldo).toBe(0)
 
     accountService.setChargeBack(document, account.transactions[1].id)
 
     expect(account.saldo).toBe(10)
 })
-test('Test extract', () => {
+test('Test extract', async () => {
 
-    accountService.setCredit(document, 10)
-    accountService.setCredit(document, 15)
-    accountService.setDebit(document, 5)
+   account = await accountService.setTransaction(document, 10, 'credito', 'C')
+   account = await  accountService.setTransaction(document, 15, 'credito', 'C')
+   account = await  accountService.setTransaction(document, 5, 'debito', 'D')
 
     expect(account.transactions.length).toBe(3)
 

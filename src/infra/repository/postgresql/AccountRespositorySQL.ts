@@ -25,9 +25,28 @@ export default class AccountRepositorySQL implements AccountRepository {
     }
     async get(accountDocument: string) {
         try {
-            return await AppDataSource.manager.findOneBy(Account, { document: accountDocument })
+
+            const accountData = await AppDataSource
+                .getRepository(Account)
+                .createQueryBuilder('account')
+                .leftJoinAndSelect('account.transactions', 'transactions')
+                .innerJoinAndSelect('transactions.events', 'events')
+                .where('account.document = :document', { document: accountDocument }).getOne()
+
+                const account: any  = accountData
+                account.saldo = 0
+                for (let index = 0; index < accountData?.transactions.length; index++) {
+                    const transaction = accountData?.transactions[index];
+                     
+                    if(transaction.events.type === 'C') account.saldo =  Number(account.saldo) + Number(transaction.amount)
+                    
+                    if(transaction.events.type === 'D') account.saldo = Number(account.saldo) - Number(transaction.amount)
+                    
+                }
+          
+            return account
         } catch (error) {
-            return { error: error.driverError.detail }
+            return { error: error.toString() }
         }
     }
 }

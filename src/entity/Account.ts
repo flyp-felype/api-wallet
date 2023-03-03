@@ -14,7 +14,7 @@ export class Account {
     @Column()
     name: string 
 
-    @OneToMany(type => Transactions, transactions => transactions.id) transactions: Transactions[]
+    @OneToMany(() => Transactions, transactions => transactions.account) transactions: Transactions[]
 
     @Column()
     createAt: Date

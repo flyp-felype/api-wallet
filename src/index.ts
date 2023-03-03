@@ -6,6 +6,7 @@ import cors from "cors";
  
 import { AppDataSource } from './data-source'; 
 import AccountController from './controller/AccountController';
+import TransactionsController from './controller/TransactionsController'
 dotenv.config();
 
 AppDataSource.initialize().then(() => { console.log('Data source has beem initialized') }).catch(err => console.log('Error during data source', err))
@@ -37,6 +38,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //accounts
 app.get('/account/:document', AccountController.get)
 app.post('/account', AccountController.create)
+app.post('/transaction', TransactionsController.transaction)
+
 
 app.get('/', (req: Request, res: Response) => {
 

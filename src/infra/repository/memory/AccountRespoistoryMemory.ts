@@ -9,16 +9,17 @@ export default class AccountRepositoryMemory implements AccountRepository {
         this.accounts = []
     }
 
-    save(account: AccountProps) { 
+      save(account: AccountProps) { 
         account.saldo = 0
         account.transactions = []
         this.accounts.push(account)
         return this.accounts.find(x => x.document === account.document)
     }
 
-    get(accountDocument: string): AccountProps {
+     get(accountDocument: string) {
         const account = this.accounts.find(x => x.document === accountDocument)
         if (!account) throw new Error("Account not found!")
+       console.log(account)
         return account
     }
 }

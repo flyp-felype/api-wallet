@@ -1,7 +1,7 @@
-import { TransactionsProps } from "../entities/account";
+import { TransactionsProps, Type } from "../entities/account";
 
  
 export default interface Observer {
-    operation: string;
+    operation: Type;
     notify(transactions: TransactionsProps): void;
 }
