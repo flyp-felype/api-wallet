@@ -14,6 +14,66 @@
         }
     ],
     "paths": {
+        "/account": {
+            "post": {
+                "summay": "Busca extrato da cliente",
+                "description": "Retrna o extrato paginado do cliente",
+                "tags": [
+                    "Account"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "document": {
+                                        "type": "string",
+                                        "description": "Número do CPF do cliente"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Nome do cliente"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Erro no cadastro da conta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "description": "Flag retorna false quando vier com erro"
+                                        },
+                                        "mensage": {
+                                            "type": "string",
+                                            "description": "Mensagem de erro"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/Account"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/account/{document}": {
             "get": {
                 "summay": "Busca pela conta",
@@ -33,11 +93,45 @@
                     }
                 ],
                 "responses": {
-                    "400": {
-                        "description": "Error"
+                    "404": {
+                        "description": "Conta não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "description": "Flag retorna false quando vier com erro"
+                                        },
+                                        "mensage": {
+                                            "type": "string",
+                                            "description": "Mensagem de erro"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
-                    "401": {
-                        "description": "Error"
+                    "400": {
+                        "description": "Erro no cadastro da conta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "description": "Flag retorna false quando vier com erro"
+                                        },
+                                        "mensage": {
+                                            "type": "string",
+                                            "description": "Mensagem de erro"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
                     "200": {
                         "description": "OK",
@@ -52,12 +146,268 @@
                     }
                 }
             }
+        },
+        "/transaction": {
+            "post": {
+                "summay": "Enviar transação",
+                "description": "Rota para enviar a transação da conta do cliente",
+                "tags": [
+                    "Transactions"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "document": {
+                                        "type": "string",
+                                        "description": "Número do CPF do cliente"
+                                    },
+                                    "event": {
+                                        "type": "string",
+                                        "description": "Evento de transação [credito, debito, estorno debito, estorno credito]"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "description": "Tipo de transação C para crédito e D para débito"
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "description": "Valor da transação"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Erro no cadastro da conta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "description": "Flag retorna false quando vier com erro"
+                                        },
+                                        "mensage": {
+                                            "type": "string",
+                                            "description": "Mensagem de erro"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "mensagem": {
+                                            "type": "string",
+                                            "description": "Transação efetuada com sucesso"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/transaction/{document}/{limit}/{page}": {
+            "get": {
+                "summay": "Busca extrato da cliente",
+                "description": "Retrna o extrato paginado do cliente",
+                "tags": [
+                    "Transactions"
+                ],
+                "parameters": [
+                    {
+                        "name": "document",
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "Código do documento da conta cadastrada"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "path",
+                        "schema": {
+                            "type": "number"
+                        },
+                        "required": true,
+                        "description": "Limite de quantidade de items retornado"
+                    },
+                    {
+                        "name": "page",
+                        "in": "path",
+                        "schema": {
+                            "type": "number"
+                        },
+                        "required": true,
+                        "description": "Página para buscar os items paginado"
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Conta não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "description": "Flag retorna false quando vier com erro"
+                                        },
+                                        "mensage": {
+                                            "type": "string",
+                                            "description": "Mensagem de erro"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro no cadastro da conta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "description": "Flag retorna false quando vier com erro"
+                                        },
+                                        "mensage": {
+                                            "type": "string",
+                                            "description": "Mensagem de erro"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "$ref": "#/components/schemas/Transactions"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/transaction/estorno": {
+            "post": {
+                "summay": "Enviar o estorno da transação",
+                "description": "Rota para enviar o estorno da transação  do cliente",
+                "tags": [
+                    "Transactions"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "document": {
+                                        "type": "string",
+                                        "description": "Número do CPF do cliente"
+                                    },
+                                    "transaction": {
+                                        "type": "number",
+                                        "description": "ID da transação"
+                                    },
+                                    "event": {
+                                        "type": "string",
+                                        "description": "Tipo do evento, estorno credito, estorno debito, estorno compra"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Conta ou transação não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "description": "Flag retorna false quando vier com erro"
+                                        },
+                                        "mensage": {
+                                            "type": "string",
+                                            "description": "Mensagem de erro"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro no cadastro da conta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "description": "Flag retorna false quando vier com erro"
+                                        },
+                                        "mensage": {
+                                            "type": "string",
+                                            "description": "Mensagem de erro"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "description": "Flag retorna false quando vier com erro"
+                                        },
+                                        "mensagem": {
+                                            "type": "string",
+                                            "description": "Transação estornada com sucesso"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
         "schemas": {
             "Account": {
-                "type": "object",
                 "properties": {
                     "id": {
                         "type": "number",
@@ -71,13 +421,60 @@
                         "type": "string",
                         "description": "Nome do cliente"
                     },
-                    "createAt": {
-                        "type": "date",
-                        "description": "Data de Criação"
+                    "saldo": {
+                        "type": "number",
+                        "description": "Saldo disponível do cliente"
                     },
                     "transactions": {
                         "type": "array",
-                        "description": "Lista de transações do cliente"
+                        "items": {
+                            "type": "object",
+                            "$ref": "#/components/schemas/Transactions"
+                        }
+                    },
+                    "createAt": {
+                        "type": "string",
+                        "description": "Data de Criação"
+                    }
+                }
+            },
+            "Transactions": {
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "description": "ID da transação"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "description": "Valor da transação"
+                    },
+                    "events": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/Events"
+                    },
+                    "createAt": {
+                        "type": "string",
+                        "description": "Data de cadastro da transação"
+                    }
+                }
+            },
+            "Events": {
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "description": "ID do evento"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Nome do evento, pode ser Crédito, Débito, Compra, Estorno Crédito..."
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "Tipo do evento, pode ser C de crédito ou D de débito"
+                    },
+                    "createAt": {
+                        "type": "string",
+                        "description": "Data de criação do evento"
                     }
                 }
             }

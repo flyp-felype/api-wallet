@@ -10,9 +10,13 @@ const AccountController = {
             const accountService = new Account(accountRepository)
 
             const account = await accountService.getAccount(document)
+
+            if(!account) return res.status(404).json({success: false, mensagem: "Conta não encontrada"})
+
             return res.status(200).json(account)
+            
         } catch (error) {
-            return res.status(400).json({ error: error.toString() })
+            return res.status(400).json({ success: false, mensagem: error.toString() })
         }
     },
     async create(req: Request, res: Response) {
@@ -36,7 +40,7 @@ const AccountController = {
 
 
         } catch (error) {
-            return res.status(400).json({ error: error.toString(0) })
+            return res.status(400).json({ success: false, mensagem: error.toString(0) })
         }
     }
 }

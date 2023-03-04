@@ -85,8 +85,8 @@ export class Account {
     
   async  setChargeBack(document: string, transactionID: number, event: string) {
         const publisher = new Publisher();
-        const account = await this.accountRepository.get(document)
-        console.log(account)
+        const account = await this.accountRepository.get(document) 
+        
         const transaction = account.transactions.find(x => x.id === transactionID)
         const typeChargeBack = transaction.type === "C" ? "EC" : "ED"
 
