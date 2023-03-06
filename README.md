@@ -24,6 +24,9 @@ Em src/services encontra toda regra da aplicação e as conexões com os reposit
 
 Foi utilizado injeção de dependencia dos Repository nos Services, assim o service não precisa saber qual é o repository.
 
+### Escala da Arquitetura
+Para deixar a aplicação fácil de scalar foi construido um Observe, Publish e Handler, assim toda transação que chega na API é publicada no Publish e observado pelo Observer, assim fica fácil construir um sistema de filas sem alterar a regra da aplicação
+
 ### Testes
 Os testes de services está em src/services/index.test.ts 
 
