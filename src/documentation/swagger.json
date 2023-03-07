@@ -1,8 +1,8 @@
 {
     "openapi": "3.0.1",
     "info": {
-        "title": "API Wallet PicPay",
-        "description": "API desafio técnico para vaga de Backend na PicPay",
+        "title": "API Wallet ",
+        "description": "API desafio técnico para vaga de Backend",
         "contact": {
             "email": "felypeweb@gmail.com"
         },
