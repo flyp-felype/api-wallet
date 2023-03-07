@@ -1,9 +1,5 @@
 
-
-![circleci-image](https://cdn-www.infobip.com/wp-content/uploads/2022/02/08143049/picpay-logo2.png)
-
-<br />
-API para o Teste BackEnd PicPay utilizando **Express** 
+API de Wallet Digital utilizando **Express** 
    
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
